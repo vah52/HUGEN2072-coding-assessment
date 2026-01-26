@@ -1710,7 +1710,7 @@ display: none;
 
 <h1 class="title toc-ignore">HUGEN-2072 Coding Assessment</h1>
 <h4 class="author">Vanessa Hong</h4>
-<h4 class="date">January 25, 2026, 19:06</h4>
+<h4 class="date">January 25, 2026, 20:05</h4>
 
 </div>
 
@@ -1882,6 +1882,23 @@ head(snp_df)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["snpID"],"name":[1],"type":["int"],"align":["right"]},{"label":["chromosome"],"name":[2],"type":["int"],"align":["right"]},{"label":["position"],"name":[3],"type":["int"],"align":["right"]},{"label":["rsID"],"name":[4],"type":["chr"],"align":["left"]},{"label":["alleleA"],"name":[5],"type":["chr"],"align":["left"]},{"label":["alleleB"],"name":[6],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"3","3":"88741","4":"rs9857182","5":"G","6":"T","_rn_":"1"},{"1":"2","2":"3","3":"128188","4":"rs34609379","5":"C","6":"A","_rn_":"2"},{"1":"3","2":"3","3":"239120","4":"rs4684304","5":"G","6":"A","_rn_":"3"},{"1":"4","2":"3","3":"279318","4":"rs73090643","5":"C","6":"T","_rn_":"4"},{"1":"5","2":"3","3":"338224","4":"rs331889","5":"T","6":"C","_rn_":"5"},{"1":"6","2":"3","3":"341836","4":"rs17021929","5":"G","6":"A","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># merge gwas$P
+s &lt;- snp_df %&gt;%
+  left_join(select(gwas, SNP, P), join_by(rsID == SNP))
+
+head(snp_annot_df)</code></pre>
+<pre><code>## An object of class &#39;SnpAnnotationDataFrame&#39;
+##   snps: 1 2 ... 6 (6 total)
+##   varLabels: snpID chromosome ... alleleB (6 total)
+##   varMetadata: labelDescription</code></pre>
+<pre class="r"><code># turn this back into a SnpAnnotationDataFrame called snp_annot_df
+snp_annot_df &lt;- SnpAnnotationDataFrame(s)
+head(pData(snp_annot_df))</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["snpID"],"name":[1],"type":["int"],"align":["right"]},{"label":["chromosome"],"name":[2],"type":["int"],"align":["right"]},{"label":["position"],"name":[3],"type":["int"],"align":["right"]},{"label":["rsID"],"name":[4],"type":["chr"],"align":["left"]},{"label":["alleleA"],"name":[5],"type":["chr"],"align":["left"]},{"label":["alleleB"],"name":[6],"type":["chr"],"align":["left"]},{"label":["P"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"3","3":"88741","4":"rs9857182","5":"G","6":"T","7":"NA","_rn_":"1"},{"1":"2","2":"3","3":"128188","4":"rs34609379","5":"C","6":"A","7":"NA","_rn_":"2"},{"1":"3","2":"3","3":"239120","4":"rs4684304","5":"G","6":"A","7":"NA","_rn_":"3"},{"1":"4","2":"3","3":"279318","4":"rs73090643","5":"C","6":"T","7":"NA","_rn_":"4"},{"1":"5","2":"3","3":"338224","4":"rs331889","5":"T","6":"C","7":"NA","_rn_":"5"},{"1":"6","2":"3","3":"341836","4":"rs17021929","5":"G","6":"A","7":"NA","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>

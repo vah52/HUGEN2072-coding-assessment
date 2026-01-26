@@ -89,4 +89,14 @@ load("/ix1/hugen2072-2026s/ca/snp_annot.RData")
 
 snp_df <- pData(snp_annot_df)
 head(snp_df)
+
+# merge gwas$P
+s <- snp_df %>%
+  left_join(select(gwas, SNP, P), join_by(rsID == SNP))
+
+head(snp_annot_df)
+
+# turn this back into a SnpAnnotationDataFrame called snp_annot_df
+snp_annot_df <- SnpAnnotationDataFrame(s)
+head(pData(snp_annot_df))
 ```
