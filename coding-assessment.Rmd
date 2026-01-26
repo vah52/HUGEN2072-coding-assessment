@@ -1,0 +1,92 @@
+---
+title: "HUGEN-2072 Coding Assessment"
+author: "Vanessa Hong"
+date: "`r format(Sys.time(), '%B %d, %Y, %R')`"
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_depth: '3'
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Coding Assessment Part 2
+
+Create an RMarkdown file that knits to an HTML file which
+
+```{r libraries}
+library(SeqArray)
+library(GWASTools)
+library(tidyverse)
+library(ggplot2)
+```
+
+### 12. Reads the two allele frequency files and the logistic regression output into R, and
+
+note: the directory for these files are: `/ihome/hugen2071-2025f/vah52/HUGEN-2072/coding-assessment/`
+
+```{r}
+cases <- read.table('/ihome/hugen2071-2025f/vah52/HUGEN-2072/coding-assessment/data4-cases.frq', header = TRUE)
+ctrls <- read.table('/ihome/hugen2071-2025f/vah52/HUGEN-2072/coding-assessment/data4-controls.frq', header = TRUE)
+gwas <- read.table('/ihome/hugen2071-2025f/vah52/HUGEN-2072/coding-assessment/gwas.assoc.logistic', header = TRUE)
+
+head(cases)
+dim(cases)
+head(ctrls)
+dim(ctrls)
+head(gwas)
+dim(gwas)
+```
+
+### 13. Plots a histogram of the case allele frequencies,
+
+```{r}
+# MAF column
+# I immediately went to use ggplot for this and it took me way too long to remember that base R also has plotting functions
+case_allele_frequencies <- cases$MAF
+hist(case_allele_frequencies, col = 'lightblue')
+```
+
+### 14. Plots a histogram of the control allele frequencies,
+
+```{r}
+control_allele_frequencies <- ctrls$MAF
+hist(control_allele_frequencies, col = 'pink')
+```
+
+### 15. Plots a scatterplot of the case individuals’ allele frequencies (y axis) 16. Versus the control individuals’ allele frequencies (x axis),
+
+```{r}
+plot(x = control_allele_frequencies, y = case_allele_frequencies, col = 'mediumpurple')
+```
+
+### 17. Plots a scatterplot of −log₁₀(p values) (y axis) versus chr4 basepair position (x axis),
+
+```{r}
+chr4_basepair_position <- gwas$BP
+p_values <- gwas$P
+
+plot(x = chr4_basepair_position, y = p_values, col = 'springgreen')
+```
+
+### 18. Reports [the marker and p value] of the marker with the lowest p value; then
+
+```{r}
+gwas[which.min(gwas$P),]
+
+print(paste("marker with the lowest p-value:", gwas[which.min(gwas$P), "SNP"]))
+print(paste("p-value of this marker:", min(gwas$P, na.rm = TRUE)))
+```
+
+### 19. Loads the `snp_annot.RData` workspace and merges the p values into the SNP annotation data frame object `snp_annot_df` in such a way that 20. The order of the SNPs in `snp_annot_df` is unchanged.
+
+```{r}
+load("/ix1/hugen2072-2026s/ca/snp_annot.RData")
+
+snp_df <- pData(snp_annot_df)
+head(snp_df)
+```
