@@ -8,7 +8,6 @@ module load plink
 
 echo "script.sh starting:"
 
-
 # 2) Copies data.vcf to your working directory 
 cp /ix1/hugen2072-2026s/ca/data.vcf /ihome/hugen2071-2025f/vah52/HUGEN-2072/coding-assessment/data.vcf
 
@@ -31,7 +30,6 @@ plink --bfile data4 --update-sex /ix1/hugen2072-2026s/ca/sex.txt --make-bed --ou
 # 7) Then uses PLINK, coupled with the phenotypes in phenotype.txt (without copying phenotype.txt to your own directory—and you should use phenotype.txt as an auxiliary file for the next few tasks without altering data4.fam to include phenotype data), to:
 head -n 5 /ix1/hugen2072-2026s/ca/phenotype.txt 
 tail -n 5 /ix1/hugen2072-2026s/ca/phenotype.txt
-
 ### 1 - unaffected (controls), 2 - affected (cases)
 ### add phenotypes to data4 <-- nevermind!
 ### plink --bfile data4 --pheno /ix1/hugen2072-2026s/ca/phenotype.txt --make-bed --out data4
