@@ -93,7 +93,6 @@ head(snp_df)
 # merge gwas$P
 s <- snp_df %>%
   left_join(select(gwas, SNP, P), join_by(rsID == SNP))
-
 head(snp_annot_df)
 
 # turn this back into a SnpAnnotationDataFrame called snp_annot_df
