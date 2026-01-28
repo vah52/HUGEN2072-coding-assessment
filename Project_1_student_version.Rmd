@@ -176,27 +176,41 @@ Using the functions introduced above to help you, briefly describe the dataset i
 
 -   [How many families are represented, and how many samples are from each family?]{.underline}
 
-    -   13 families are represented.
+    -   13 families are represented. The breakdown of samples from each family is listed in the code block below.
 
 -   [How many samples are of each sex?]{.underline}
 
     -   42 male samples and 35 female samples
 
--   How many samples are from each population group?
+-   [How many samples are from each population group?]{.underline}
 
-    -   
+    -   CEU – 49 samples.
 
--   How many samples are there? How many people did they come from?
+    -    YRI – 28 samples.
 
-    -   
+-   [How many samples are there? How many people did they come from?]{.underline}
+
+    -   There are 77 samples (scans), which came from 43 people.
 
 -   [How many SNPs are there?]{.underline}
 
-    -   3300 SNPs
+    -   3300 SNPs.
 
 -   [Which chromosomes are represented? How many SNPs are on each?]{.underline}
 
-    -   There are 6 chromosomes represented– 21 22 23 24 25 26
+    -   There are 6 chromosomes represented– 21 22 23 24 25 26.
+
+        -   chr 21: 1000 SNPs
+
+        -   chr 22: 1000 SNPs
+
+        -   chr 23: 1000 SNPs
+
+        -   chr 24: 100 SNPs
+
+        -   chr 25: 100 SNPs
+
+        -   chr 26: 100 SNPs
 
 ```{r part0_report}
 library(tidyverse)
@@ -204,23 +218,37 @@ library(tidyverse)
 # Your code goes here
 snp <- pData(snpAnnot)
 scan <- pData(scanAnnot)
-snp
-scan
+head(snp)
+head(scan)
 
-# families represented
+# How many families are represented, and how many samples are from each family?
+print('families')
 length(unique(scan$family))
+table(scan$family)
 
 # How many samples are of each sex?
-# scan %>%
-#   filter(sex == 'M') # 42 
-# scan %>%
-#   filter(sex == 'F') # 35
+scan %>%
+  filter(sex == 'M') %>%
+  count() # 44
+scan %>%
+  filter(sex == 'F') %>%
+  count() # 33
+
+# How many samples are from each population group?
+print('race')
+table(scan$race)
+
+# How many samples are there? How many people did they come from?
+print('subjects')
+length(unique(scan$subjectID))
 
 # how many snps
+print('snps')
 length(unique(snp$snpID))
 
 # which chromosomes
-unique(snp$chromosome)
+print('chromosomes')
+table(snp$chromosome)
 ```
 
 ## Part 1 - Missing Call Rate for Samples and SNPs
@@ -324,7 +352,7 @@ Now, supply your code to calculate and store `missing.n2`. The steps you should 
 
 ### Now that missing.n1 and missing.e1 have been calculated, we can calculate missing.n2
 
-#   Recall that missing.n2 = call rate per SNP over all samples whose missing.e1
+#   Recall that missing.n2 = missing call rate per SNP over all samples whose missing.e1
 #   is less than 0.05.
 
 #   Since no sample had missing.e1 > 0.05 in this dataset, we don't actually
@@ -366,7 +394,7 @@ summary(snpAnnot$missing.n2)
 hist(
   snpAnnot$missing.n2,
   xlab = "Fraction of call rate per SNP over all samples whose missing.e1 < 0.05",
-  main = "Histogram of missing.n2",
+  main = "Missing call rate per SNP over all samples whose missing.e1 < 0.05.",
   col = 'lightblue'
 )
 
@@ -411,12 +439,12 @@ scanAnnot$missing.e2 <- miss$missing.fraction
 varMetadata(scanAnnot)["missing.e2", "labelDescription"] <-
   "fraction of genotype calls missing over all snps with missing.n2 < 0.05 except that Y chr SNPs are excluded for females"
 
-# histogram for fun
+# histogram 
 summary(scanAnnot$missing.e2)
 hist(
   scanAnnot$missing.e2,
   xlab = "Fraction of MCR per sample over all SNPs with missing.n2 values < 0.05",
-  main = "Histogram of missing.e2",
+  main = "Missing call rate per sample over all SNPs with missing.n2 < 0.05",
   col = 'mediumpurple'
 )
 ```
@@ -429,7 +457,7 @@ Summarize the filtering you've accomplished at this step. Include the following 
 
 -   [How many SNPs and samples were genotyped?]{.underline}
 
-    -   3300 SNPs and 77 samples exist. genotyped.
+    -   3300 SNPs and 77 samples exist, and 3149 (the ones who do not have 100% missingness) SNPs and 77 samples were genotyped.
 
 -   [Briefly describe the purpose of doing this step in two rounds (why do we calculate both missingnesses twice?)]{.underline}
 
@@ -451,7 +479,7 @@ Summarize the filtering you've accomplished at this step. Include the following 
 
 -   [Are the samples generally "good"? How many should be excluded from downstream analyses?]{.underline}
 
-    -   The samples seem pretty good– the majority of missing.e2 MCR = 0%, and the maximum of missing.e2 is not even 0.025.
+    -   The samples seem pretty good– the majority of missing.n2 MCR = 0%, and the maximum of missing.e2 is under 0.025. I don't see any that should be excluded from downstream analyses until further investigation.
 
 -   [How many SNPs had a 100% missing call rate (use `missing.n1`)?]{.underline}
 
@@ -485,22 +513,50 @@ library(ggplot2)
 #   <Your code goes here>
 sc <- pData(scanAnnot) # e1, e2
 sn <- pData(snpAnnot) # n1, n2
-sc 
-sn
+head(sc) 
+head(sn)
+
+# How many SNPs and samples were genotyped?
+sn %>%
+  filter(missing.n1 != 1) %>%
+  count() # 3149 
+
+# missing.e2 histogram 
+summary(scanAnnot$missing.e2)
+hist(
+  scanAnnot$missing.e2,
+  xlab = "Fraction of MCR per sample over all SNPs with missing.n2 values < 0.05",
+  main = "Missing call rate per sample over all SNPs with missing.n2 < 0.05",
+  col = 'mediumpurple'
+)
 
 # How many samples had no missing calls at all (use missing.e2)?
 sc %>%
-  filter(missing.e2 == 0)
+  filter(missing.e2 == 0) # 1? is this not meant to be 6???
+
+# How many SNPs had a 100% missing call rate (use missing.n1)?
 sn %>%
-  filter(missing.n1 == 1)
+  filter(missing.n1 == 1) %>%
+  count() # 151
+
+# missing.n2 histogram
+summary(snpAnnot$missing.n2)
+hist(
+  snpAnnot$missing.n2,
+  xlab = "Fraction of call rate per SNP over all samples whose missing.e1 < 0.05",
+  main = "Missing call rate per SNP over all samples whose missing.e1 < 0.05.",
+  col = 'lightblue'
+)
 
 # What are the median, mean, and maximum per-SNP missingnesses (use missing.n2)? How many SNPs are missing no calls at all?
 sn %>%
-  filter(missing.n2 == 0)
+  filter(missing.n2 == 0) %>%
+  count() # 2755
 
 # How many SNPs are filtered out and how many remain if you retain only SNPs with missing.n2 < 0.05?
 sn %>% 
-  filter(missing.n2 < 0.05)
+  filter(missing.n2 < 0.05) %>%
+  count() # 3095
 
 # Make a histogram showing missing.n2 for the remaining SNPs.
 hist(
@@ -695,6 +751,8 @@ par(mfrow = c(1, 1))
 
 -   [Remake the 4 plots above, using the "corrected" data (nothing should appear mislabeled now for this dataset).]{.underline}
 
+    -   See coding block below.
+
 -   [How might you follow up on this "in real life"?]{.underline}
 
     -   Alert the PI that there were some sex discrepancies, which should now have been corrected.
@@ -842,7 +900,7 @@ par(mfrow = c(1, 1))
 
 -   [Show an example of a "normal" pair of BAF/LRR plots (choose any chromosome/scanID you want).]{.underline}
 
-    -   Chromosome 21 on scanID 280 appears to have very typical BAF/LRR plots.
+    -   Chromosome 21 on scanID 280 appears to have very typical BAF/LRR plots. See coding chunk below.
 
 -   [How would you detect trisomy 21 (i.e., describe briefly in words what the BAF/LRR plot would look like).]{.underline}
 
@@ -856,7 +914,7 @@ par(mfrow = c(1, 1))
 
 -   [Suppose chromosome 22 in sample 286 was the only chromosome flagged for a possible anomaly in this dataset. Looking at the plot, do you notice anything strange? Can you suggest what kind of anomaly might be showing up? (There isn't any single answer that's certainly right! The purpose of this question is to check that you understand what the BAF and LRR plots "mean").]{.underline}
 
-    -   Chromosome 22 doesn't seem unusual. The LRR plot remains at 0, and the BAF plot has three bands representing AA/AB/BB (with the heterozygous band in the very middle of the plot).
+    -   Chromosome 22 doesn't seem unusual. The LRR plot remains at 0, and the BAF plot has three bands representing AA/AB/BB (with the heterozygous band in the very middle of the plot). Though, there is a small empty area in the middle band between 25-30 of the BAF plot, which could have led to the lag.
 
 -   [Finally, suppose your pipeline has given you a list of the exact chromosomal segments showing possibly aneuploidies/anomalies in each sample. What would you recommend doing with the genotypes in those segments? (You're not being asked to implement this here - just say what you recommend doing.)]{.underline}
 
@@ -870,4 +928,4 @@ chromIntensityPlot(blData, scan.ids = 280, chrom.ids = 21)
 par(mfrow = c(1, 1))
 ```
 
-**NOTE: Caylin Grove, Aakash, Singh, Ceceliagh Pitstick, Shane Buckley, and I reviewed our code with each other.**
+**NOTE: I, Caylin Grove, Ceceilagh Pitstick, and Shane Buckley, reviewed our code with each other after we finished the assignment.**
