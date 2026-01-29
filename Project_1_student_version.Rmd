@@ -178,29 +178,18 @@ Using the functions introduced above to help you, briefly describe the dataset i
 
     -   13 families are represented.
 
-        +--------+---------+
         | family | samples |
-        +=======:+========:+
-        | 4      | 5       |
-        +--------+---------+
-        | 5      | 6       |
-        +--------+---------+
-        | 9      | 5       |
-        +--------+---------+
-        | 12     | 5       |
-        +--------+---------+
-        | 28     | 5       |
-        +--------+---------+
-        | 58     | 2       |
-        +--------+---------+
-        | 1334   | 6       |
-        +--------+---------+
-        | 1340   | 5       |
-        +--------+---------+
-        | 1341   | 9       |
-        +--------+---------+
-        | 1344   | 6       |
-        +--------+---------+
+        |-------:|--------:|
+        |      4 |       5 |
+        |      5 |       6 |
+        |      9 |       5 |
+        |     12 |       5 |
+        |     28 |       5 |
+        |     58 |       2 |
+        |   1334 |       6 |
+        |   1340 |       5 |
+        |   1341 |       9 |
+        |   1344 |       6 |
 
 -   [How many samples are of each sex?]{.underline}
 
@@ -210,7 +199,7 @@ Using the functions introduced above to help you, briefly describe the dataset i
 
     -   CEU – 49 samples.
 
-    -    YRI – 28 samples.
+    -   YRI – 28 samples.
 
 -   [How many samples are there? How many people did they come from?]{.underline}
 
@@ -940,7 +929,7 @@ par(mfrow = c(1, 1))
 
 -   [Suppose chromosome 22 in sample 286 was the only chromosome flagged for a possible anomaly in this dataset. Looking at the plot, do you notice anything strange? Can you suggest what kind of anomaly might be showing up? (There isn't any single answer that's certainly right! The purpose of this question is to check that you understand what the BAF and LRR plots "mean").]{.underline}
 
-    -   Chromosome 22 doesn't seem unusual. The LRR plot remains at 0, and the BAF plot has three bands representing AA/AB/BB (with the heterozygous band in the very middle of the plot). Though, there is a small empty area in the middle band between 25-30 of the BAF plot, which could have led to the lag.
+    -   Chromosome 22 doesn't seem unusual. The LRR plot remains at 0, and the BAF plot has three bands representing AA/AB/BB (with the heterozygous band in the very middle of the plot). Though, there is a small empty area in the middle band between 25-30 of the BAF plot, which may have led to the flag.
 
 -   [Finally, suppose your pipeline has given you a list of the exact chromosomal segments showing possibly aneuploidies/anomalies in each sample. What would you recommend doing with the genotypes in those segments? (You're not being asked to implement this here - just say what you recommend doing.)]{.underline}
 
