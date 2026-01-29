@@ -172,15 +172,39 @@ Using the functions introduced above to help you, briefly describe the dataset i
 
 -   [What is the difference between the scanID and subjectID variables? Why are they both provided?]{.underline}
 
-    -   A subjectID is an identifier for a person, and each subject can have multiple scanIDs (samples) in the data. It's important to have all of these samples listed with their respective subject IDs to keep track of the individuals in the study.
+    -   A subjectID is an identifier for a person, and each subject can have multiple scanIDs (samples) in the data. It's important to have all of these samples listed with their respective subject IDs to keep track of which samples came from which individuals.
 
 -   [How many families are represented, and how many samples are from each family?]{.underline}
 
-    -   13 families are represented. The breakdown of samples from each family is listed in the code block below.
+    -   13 families are represented.
+
+        +--------+---------+
+        | family | samples |
+        +=======:+========:+
+        | 4      | 5       |
+        +--------+---------+
+        | 5      | 6       |
+        +--------+---------+
+        | 9      | 5       |
+        +--------+---------+
+        | 12     | 5       |
+        +--------+---------+
+        | 28     | 5       |
+        +--------+---------+
+        | 58     | 2       |
+        +--------+---------+
+        | 1334   | 6       |
+        +--------+---------+
+        | 1340   | 5       |
+        +--------+---------+
+        | 1341   | 9       |
+        +--------+---------+
+        | 1344   | 6       |
+        +--------+---------+
 
 -   [How many samples are of each sex?]{.underline}
 
-    -   42 male samples and 35 female samples
+    -   42 male samples and 35 female samples.
 
 -   [How many samples are from each population group?]{.underline}
 
@@ -224,7 +248,8 @@ head(scan)
 # How many families are represented, and how many samples are from each family?
 print('families')
 length(unique(scan$family))
-table(scan$family)
+scan %>%
+  count(family)
 
 # How many samples are of each sex?
 scan %>%
@@ -270,6 +295,7 @@ We'll want to store the missingness information in the annotation data frames as
 Here's how to calculate and store `missing.n1`.
 
 ```{r missing.n1, eval=TRUE}
+# EXAMPLE CODE
 
 ### Using missingGenotypeBySnpSex to calculate missing.n1 ###
 

@@ -1899,17 +1899,70 @@ variables? Why are they both provided?</u></p>
 <li>A subjectID is an identifier for a person, and each subject can have
 multiple scanIDs (samples) in the data. It’s important to have all of
 these samples listed with their respective subject IDs to keep track of
-the individuals in the study.</li>
+which samples came from which individuals.</li>
 </ul></li>
 <li><p><u>How many families are represented, and how many samples are
 from each family?</u></p>
 <ul>
-<li>13 families are represented. The breakdown of samples from each
-family is listed in the code block below.</li>
+<li><p>13 families are represented.</p>
+<table style="width:26%;">
+<colgroup>
+<col width="12%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">family</th>
+<th align="right">samples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">4</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="right">12</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="right">28</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="right">58</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">1334</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="right">1340</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="right">1341</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="right">1344</td>
+<td align="right">6</td>
+</tr>
+</tbody>
+</table></li>
 </ul></li>
 <li><p><u>How many samples are of each sex?</u></p>
 <ul>
-<li>42 male samples and 35 female samples</li>
+<li>42 male samples and 35 female samples.</li>
 </ul></li>
 <li><p><u>How many samples are from each population group?</u></p>
 <ul>
@@ -1997,10 +2050,22 @@ print(&#39;families&#39;)</code></pre>
 <pre><code>## [1] &quot;families&quot;</code></pre>
 <pre class="r"><code>length(unique(scan$family))</code></pre>
 <pre><code>## [1] 13</code></pre>
-<pre class="r"><code>table(scan$family)</code></pre>
-<pre><code>## 
-##    4    5    9   12   28   58 1334 1340 1341 1344 1347 1362 1408 
-##    5    6    5    5    5    2    6    5    9    6    6   11    6</code></pre>
+<pre class="r"><code>scan %&gt;%
+  count(family)</code></pre>
+<pre><code>##    family  n
+## 1       4  5
+## 2       5  6
+## 3       9  5
+## 4      12  5
+## 5      28  5
+## 6      58  2
+## 7    1334  6
+## 8    1340  5
+## 9    1341  9
+## 10   1344  6
+## 11   1347  6
+## 12   1362 11
+## 13   1408  6</code></pre>
 <pre class="r"><code># How many samples are of each sex?
 scan %&gt;%
   filter(sex == &#39;M&#39;) %&gt;%
@@ -2068,7 +2133,9 @@ over all SNPs with <code>missing.n2</code> values less than
 <p>We’ll want to store the missingness information in the annotation
 data frames as we proceed.</p>
 <p>Here’s how to calculate and store <code>missing.n1</code>.</p>
-<pre class="r"><code>### Using missingGenotypeBySnpSex to calculate missing.n1 ###
+<pre class="r"><code># EXAMPLE CODE
+
+### Using missingGenotypeBySnpSex to calculate missing.n1 ###
 
 #   First look at some of the results
 miss &lt;- missingGenotypeBySnpSex(genoData)
