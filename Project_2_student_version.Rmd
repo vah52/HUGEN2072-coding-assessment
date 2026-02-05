@@ -1427,16 +1427,16 @@ legend("topright",
 
 -   [Summarize the pedigree structures you observe in the data.]{.underline}
 
-    -   There appears to be a 34 duplicates, 90 parent-offspring pairs, and most of the data (2802 points) is a large cluster of unrelated pairs.
+    -   There appears to be 34 duplicate pairs and 90 parent-offspring pairs, and most of the data (2802 points) is a large cluster of unrelated pairs.
 
 -   [Describe what discrepancies you observe in the initial kinship vs IBS0 plot.]{.underline}
 
-    -   Initially, there were several parent-offspring pairs located in the "unrelated" cluster.
+    -   Initially, there were several parent-offspring pairs located in the "unrelated" cluster and unrelated pairs located in the "parent-offspring" cluster.
 
 -   [Explain exactly the kinds of swaps/discrepancies that were found, which IDs were involved, and exactly how you "fixed" them.]{.underline}
 
     -   It turns out there were four sample swaps (two subjects) for scanIDs 296 and 297 (from subjectID 200016815), 298 and 299 (from subjectID 200071490). This was corrected simply by manually swapping the mother, father, and family IDs from these two subjects.\
-        There was also a discrepancy where the scanAnnot pedigree said that scanID 356 is 355's father, but the kinship calculation says they are genetically unrelated. We corrected this by setting scanID 355's father to 0 and giving scanID 356 a new unique family ID (58_2 instead of 58).
+        There was also a discrepancy where the scanAnnot pedigree said that scanID 356 is 355's father, but according to the kinship calculation they are genetically unrelated. We corrected this by setting scanID 355's father to 0 and giving scanID 356 a new unique family ID (58_2 instead of 58).
 
 -   [How would you recommend following up on these discrepancies "in real life" (instead of just assuming we know what happened and manually changing the data, which is a *bad idea*)?]{.underline}
 
@@ -1460,7 +1460,6 @@ s <- s %>%
     mutate(relationship.changes = case_when(
       scanID >= 296 & scanID <= 299 ~ "sample_swap",
       scanID == 356 | scanID == 355 ~ "unrelated",
-      scanID == 356 ~ 'UNRELATED'
     ))
 head(s)
 # turn this back into a SnpAnnotationDataFrame called scanAnnot
@@ -1999,7 +1998,7 @@ Briefly explain the purpose of HWE testing. In describing your results for this 
 
 -   [How do you choose what subjects to include for HWE testing? How many were used here?]{.underline}
 
-    -   Since HWE is sensitive to population substructure, we stratified by ancestry and chose only subjects from one race group (here, we picked CEU). We also only want to include "founders" or individuals who do not have parents in the pedigree, and we want to remove duplicates as well. After this filtering, we are left with
+    -   Since HWE is sensitive to population substructure, we stratified by ancestry and chose only subjects from one race group (here, we picked CEU). We also only want to include "founders" or individuals who do not have parents in the pedigree, and we want to remove duplicates as well. After this filtering, we are left with 3000 SNPs.
 
 -   [Interpret the Q-Q plots. Do any SNPs appear to be strongly out of HWE? Which SNPs? What are the lowest p-values?]{.underline}
 
