@@ -2003,13 +2003,13 @@ Briefly explain the purpose of HWE testing. In describing your results for this 
 
 -   [Interpret the Q-Q plots. Do any SNPs appear to be strongly out of HWE? Which SNPs? What are the lowest p-values?]{.underline}
 
-    -   The Q-Q plots are not terrible, though not excellent, but the X chromosome graph in particular is not very good as it exhibits a stepped distribution and does not align well with the reference line. The SNPs on the X chromosome seem most strongly out of HWE. The lowest p-value is p = 5.616715e-05.
+    -   The Q-Q plots are not horrible, though not excellent, but the X chromosome graph in particular is not very good as it exhibits a stepped distribution and does not align well with the reference line. The SNPs on the X chromosome seem most strongly out of HWE. The lowest p-value is p = 5.616715e-05.
 
 -   [For the autosomal SNPs, make a plot of -log10(p-value) vs MAF. Make another such plot for the X chromosome.]{.underline}
 
 -   [What p-value will you use for filtering our SNPs with low HWE? Of the SNPs with missing.n2 \< 0.05, how many will be retained/removed?]{.underline}
 
-    -   While the standard seems to be a p-value of 1\*10\^-4 (as stated in Geno_QC_Mendelian_Errors slide 33), that is far too low of a value for this data. I chose instead p = 0.75
+    -   I chose p = 0.75 from looking at the scatterplots– there seems to be a large gap between values greater than and less than 0.75. Using this threshold, 2353 SNPs are filtered out, leaving the data with 947 SNPs (from the original 3300).
 
 -   [Add the HWE p-values to the SNP annotation (and update the metadata)]{.underline}
 
@@ -2051,7 +2051,14 @@ head(pData(snpAnnot))
 
 # What p-value will you use for filtering our SNPs with low HWE? Of the SNPs with missing.n2 < 0.05, how many will be retained/removed?
 p %>%
-  filter(pval <= 0.75) # from our scatterplots
+  filter(missing.n2 < 0.05) %>%
+  filter(pval <= 0.75) %>% # from our scatterplots
+  count() # 947
+
+p %>% # all
+  ggplot() +
+  geom_point(aes(x = missing.n2, y = pval), col = 'blue') +
+  labs(title = '-log10(p-value) vs MAF in all SNPs')
 ```
 
 **NOTE: I, Caylin Grove, and Ceceilagh Pitstick reviewed our code with each other after we finished the assignment.**
